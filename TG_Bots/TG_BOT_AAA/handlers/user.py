@@ -13,6 +13,7 @@ class Form(StatesGroup):
     waiting_for_phone = State()
     waiting_for_access_code = State()
     waiting_for_registration_code = State()
+    waiting_for_estimate_text = State()
 
 # Клавиатура для выбора действия (Войти или Регистрация)
 ENTER_KB = get_keyboard(
@@ -41,6 +42,14 @@ CATALOG_KB = get_keyboard(
     "Корзина",
     placeholder="Выберите раздел каталога",
     sizes=(2, 2, 2, 1),
+)
+
+# Клавиатура для ввода текста сметы
+ESTIMATE_KB = get_keyboard(
+    "Создать",
+    "Назад",
+    placeholder="Выберите действие",
+    sizes=(1, 1),
 )
 
 def generate_password():
@@ -168,6 +177,23 @@ async def process_registration_code(message: types.Message, state: FSMContext):
     else:
         await message.answer("Неправильный пароль. Попробуйте еще раз.")
 
+@user_r.message(F.text == "Составить смету")
+async def estimate_cmd(message: types.Message, state: FSMContext):
+    await state.set_state(Form.waiting_for_estimate_text.state)
+    await message.answer("Введите текст для сметы:", reply_markup=ESTIMATE_KB)
+
+@user_r.message(F.text, StateFilter(Form.waiting_for_estimate_text))
+async def process_estimate_text(message: types.Message, state: FSMContext):
+    estimate_text = message.text
+    if estimate_text == "Создать":
+        # Логика для создания сметы
+        await message.answer("Смета создана.", reply_markup=CATALOG_KB)
+        await state.clear()  # Очистка состояния после создания сметы
+    elif estimate_text == "Назад":
+        await message.answer("Вы вернулись в меню каталога товаров.", reply_markup=CATALOG_KB)
+        await state.clear()  # Очистка состояния после нажатия кнопки "Назад"
+    else:
+        await message.answer("Пожалуйста, используйте кнопки 'Создать' или 'Назад'.")
 
 @user_r.message(F.text == "Задачи")
 async def tasks_cmd(message: types.Message, state: FSMContext):
@@ -183,6 +209,3 @@ async def tasks_cmd(message: types.Message, state: FSMContext):
 
     # Если бот не в ожидаемом состоянии, продолжаем обработку
     await message.answer("Задачи на сегодня:\n1. Покушать\n2. Покакать\n3. Поспать")
-
-
-
