@@ -26,9 +26,10 @@ ENTER_KB = get_keyboard(
 # Клавиатура для отправки номера телефона
 PHONE_KB = get_keyboard(
     "Отправить номер телефона",
+    "Назад",
     placeholder="Отправьте номер телефона",
     request_contact=0,  # Запрашиваем номер телефона
-    sizes=(1,),
+    sizes=(1, 1),
 )
 
 # Клавиатура для каталога товаров
@@ -69,21 +70,29 @@ def save_user(phone_number, password):
     conn.close()
 
 def validate_user(phone_number, password):
-    """Проверяет пользователя по номеру телефона и паролю."""
+    """Проверяет пользователя по номеру телефона и паролю.
+    
+    Возвращает:
+    - 'not_registered' если номер телефона не найден
+    - 'wrong_password' если пароль неправильный
+    - 'valid' если все верно
+    """
     print(f"Validating user with phone number: {phone_number} and password: {password}")  # Логирование
 
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
     cursor.execute('SELECT password FROM users WHERE phone_number = ?', (phone_number,))
-    stored_password = cursor.fetchone()
+    result = cursor.fetchone()
     conn.close()
 
-    if stored_password:
-        print(f"Stored password: {stored_password[0]}")  # Логирование
+    if result is None:
+        return 'not_registered'
+    
+    stored_password = result[0]
+    if stored_password == password:
+        return 'valid'
     else:
-        print("User not found")  # Логирование
-
-    return stored_password and stored_password[0] == password
+        return 'wrong_password'
 
 @user_r.message(CommandStart())
 async def enter_cmd(message: types.Message):
@@ -101,6 +110,11 @@ async def register_cmd(message: types.Message, state: FSMContext):
     await state.update_data(action="register")
     await message.answer("Пожалуйста, отправьте ваш номер телефона для регистрации.", reply_markup=PHONE_KB)
 
+@user_r.message(F.text == "Назад", StateFilter(Form.waiting_for_phone))
+async def back_to_main(message: types.Message, state: FSMContext):
+    await state.clear()  # Очистка состояния
+    await message.answer("Вы вернулись в главное меню.", reply_markup=ENTER_KB)
+
 @user_r.message(F.contact, StateFilter(Form.waiting_for_phone))
 async def process_contact(message: types.Message, state: FSMContext):
     phone_number = message.contact.phone_number.strip().replace(' ', '')
@@ -114,8 +128,13 @@ async def process_contact(message: types.Message, state: FSMContext):
 
     if action == "login":
         await state.update_data(phone_number=phone_number)  # Сохранение номера телефона
-        await message.answer("Номер телефона сохранен. Пожалуйста, введите ваш пароль.")
-        await state.set_state(Form.waiting_for_access_code.state)
+        validation_result = validate_user(phone_number, None)
+        if validation_result == 'not_registered':
+            await message.answer("Этот номер телефона не зарегистрирован. Пожалуйста, зарегистрируйтесь.")
+            await state.set_state(Form.waiting_for_phone.state)
+        else:
+            await message.answer("Номер телефона сохранен. Пожалуйста, введите ваш пароль.")
+            await state.set_state(Form.waiting_for_access_code.state)
     elif action == "register":
         # Генерация и сохранение пароля
         password = generate_password()
@@ -137,8 +156,13 @@ async def process_manual_phone(message: types.Message, state: FSMContext):
 
     if action == "login":
         await state.update_data(phone_number=phone_number)  # Сохранение номера телефона
-        await message.answer("Номер телефона сохранен. Пожалуйста, введите ваш пароль.")
-        await state.set_state(Form.waiting_for_access_code.state)
+        validation_result = validate_user(phone_number, None)
+        if validation_result == 'not_registered':
+            await message.answer("Этот номер телефона не зарегистрирован. Пожалуйста, зарегистрируйтесь.")
+            await state.set_state(Form.waiting_for_phone.state)
+        else:
+            await message.answer("Номер телефона сохранен. Пожалуйста, введите ваш пароль.")
+            await state.set_state(Form.waiting_for_access_code.state)
     elif action == "register":
         # Генерация и сохранение пароля
         password = generate_password()
@@ -157,11 +181,19 @@ async def process_access_code(message: types.Message, state: FSMContext):
     
     print(f"Validating user with phone number: {phone_number} and password: {access_code}")  # Логирование
 
-    if validate_user(phone_number, access_code):
+    validation_result = validate_user(phone_number, access_code)
+    if validation_result == 'valid':
         await message.answer("Пароль верный. Добро пожаловать в каталог товаров!", reply_markup=CATALOG_KB)
         await state.clear()  # Очистка состояния после успешного входа
-    else:
+    elif validation_result == 'wrong_password':
         await message.answer("Неправильный пароль. Попробуйте еще раз.")
+    elif validation_result == 'not_registered':
+        await message.answer("Этот номер телефона не зарегистрирован. Пожалуйста, зарегистрируйтесь.")
+
+@user_r.message(F.text == "Назад", StateFilter(Form.waiting_for_access_code))
+async def back_to_phone_input(message: types.Message, state: FSMContext):
+    await state.set_state(Form.waiting_for_phone.state)
+    await message.answer("Пожалуйста, отправьте ваш номер телефона для входа.", reply_markup=PHONE_KB)
 
 @user_r.message(F.text, StateFilter(Form.waiting_for_registration_code))
 async def process_registration_code(message: types.Message, state: FSMContext):
@@ -171,11 +203,22 @@ async def process_registration_code(message: types.Message, state: FSMContext):
     
     print(f"Validating user with phone number: {phone_number} and registration code: {registration_code}")  # Логирование
 
-    if validate_user(phone_number, registration_code):
+    validation_result = validate_user(phone_number, registration_code)
+    if validation_result == 'valid':
         await message.answer("Регистрация завершена. Добро пожаловать в каталог товаров!", reply_markup=CATALOG_KB)
         await state.clear()  # Очистка состояния после успешной регистрации
-    else:
+    elif validation_result == 'wrong_password':
         await message.answer("Неправильный пароль. Попробуйте еще раз.")
+    elif validation_result == 'not_registered':
+        await message.answer("Этот номер телефона не зарегистрирован. Пожалуйста, попробуйте снова или зарегистрируйтесь.")
+
+@user_r.message(F.text == "Назад", StateFilter(Form.waiting_for_registration_code))
+async def back_to_phone_input_reg(message: types.Message, state: FSMContext):
+    await state.set_state(Form.waiting_for_phone.state)
+    await message.answer("Пожалуйста, отправьте ваш номер телефона для регистрации.", reply_markup=PHONE_KB)
+
+
+
 
 @user_r.message(F.text == "Составить смету")
 async def estimate_cmd(message: types.Message, state: FSMContext):
@@ -201,10 +244,10 @@ async def tasks_cmd(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     print(f"Current state in tasks_cmd: {current_state}")  # Логируем текущее состояние
 
-    # Если бот находится в состоянии ожидания кода доступа или регистрационного кода, игнорируем запрос
-    if current_state in [Form.waiting_for_access_code.state, Form.waiting_for_registration_code.state]:
-        print("Bot is in waiting state for access code or registration code.")  # Логируем состояние
-        await message.answer("Пожалуйста, завершите текущий процесс входа или регистрации.")
+    # Если бот находится в состоянии ожидания кода доступа, регистрационного кода или текста сметы, игнорируем запрос
+    if current_state in [Form.waiting_for_access_code.state, Form.waiting_for_registration_code.state, Form.waiting_for_estimate_text.state]:
+        print("Bot is in waiting state for access code, registration code, or estimate text.")  # Логируем состояние
+        await message.answer("Пожалуйста, завершите текущий процесс входа, регистрации или создания сметы.")
         return
 
     # Если бот не в ожидаемом состоянии, продолжаем обработку
