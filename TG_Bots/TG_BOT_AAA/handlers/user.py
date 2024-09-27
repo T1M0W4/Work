@@ -251,4 +251,4 @@ async def tasks_cmd(message: types.Message, state: FSMContext):
         return
 
     # Если бот не в ожидаемом состоянии, продолжаем обработку
-    await message.answer("Задачи на сегодня:\n1. Покушать\n2. Покакать\n3. Поспать")
+    await message.answer("Задачи на сегодня:\n1. Покушать\n2. Поспать")
