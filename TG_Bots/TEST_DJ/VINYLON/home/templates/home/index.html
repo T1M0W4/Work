@@ -1,0 +1,21 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'deps/css/my_footer_css.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1 class="mt-5 pt-5"><span style="color: rgb(215, 204, 204);">{{ content_1 }}</span>
+    <br>
+    <strong><span style="color: rgb(18, 6, 6);">{{ content_2 }}</span></strong></h1>
+{% endblock  %}
+
+{% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Home Python Hub Studio 2024</p>
+    </div>
+</footer>
+{% endblock  %}
+
