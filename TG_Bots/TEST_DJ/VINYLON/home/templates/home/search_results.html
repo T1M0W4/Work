@@ -1,0 +1,19 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block title %}{% trans "Результат поиска" %}{% endblock  %}
+
+{% block content %}
+    <h1>Результаты поиска</h1>
+
+    {% if vinyls %}
+        <ul>
+            {% for vinyls in vinyls %}
+                <li>{{vinyl.title}}-{{vinyl.title}}-{{vinyl.title}} $</li>
+            {% endif %}
+        <ul>   
+    {% else %}
+            <p>Ничего не найдено</p>
+    {% endif %}
+
+{% endblock  %}

@@ -1,0 +1,65 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<div class="main-content">
+<!-- Боковая панель для авторизованных пользователей -->
+<div class="sidebar">
+{% if user.is_authenticated %}
+<h2>Профиль</h2>
+<p>Имя: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+<h3>Мои заказы</h3>
+<ul>
+{% for order in orders %}
+<li>Заказ #{{ order.id }} - {{ order.created_at }}</li>
+{% empty %}
+<li>У вас нет заказов</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>Войдите в систему, чтобы увидеть ваши заказы.</p>
+{% endif %}
+</div>
+<!-- Список виниловых пластинок -->
+<div class="vinyl-list">
+<h2>Каталог виниловых пластинок</h2>
+{% for vinyl in vinyls %}
+<div class="vinyl-item">
+<h3>{{ vinyl.title }}</h3>
+<p>Исполнитель: {{ vinyl.artist }}</p>
+<p class="price">{{ vinyl.price }} $</p>
+</div>
+{% empty %}
+<p>Пластинки не найдены.</p>
+{% endfor %}
+<!-- Пагинация -->
+<div class="pagination">
+{% if is_paginated %}
+<span class="step-links">
+{% if page_obj.has_previous %}
+<a href="?page=1">&laquo; первая</a>
+<a href="?page={{ page_obj.previous_page_number }}">предыдущая</a>
+{% endif %}
+<span class="current">
+Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+</span>
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">следующая</a>
+<a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a>
+{% endif %}
+</span>
+{% endif %}
+</div>
+</div>
+</div>
+<!-- Отображение топ-10 тегов -->
+<div class="tags">
+<h3>Топ 10 тегов</h3>
+<ul>
+{% for tag in top_tags %}
+<li><a href="#">{{ tag.name }} ({{ tag.num_records }})</a></li>
+{% empty %}
+<li>Теги не найдены.</li>
+{% endfor %}
+</ul>
+</div>
+{% endblock %}
