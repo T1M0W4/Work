@@ -35,14 +35,14 @@ class SearchResultsView(ListView):
 
 
 
-def home(request):
-    context: dict[str, str] = {
-        'title': 'Home - Главная',
-        'content_1': 'Музыкальная площадка',
-        'content_2': 'VINYLON',
-    }
+# def home(request):
+#     context: dict[str, str] = {
+#         'title': 'Home - Главная',
+#         'content_1': 'Музыкальная площадка',
+#         'content_2': 'VINYLON',
+#     }
 
-    return render(request, 'home/index.html', context)
+#     return render(request, 'home/index.html', context)
 
 def about(request):
     context: dict[str, str] = {

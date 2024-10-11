@@ -1,5 +1,6 @@
 {% extends "home/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}{% trans "Результат поиска" %}{% endblock  %}
 
@@ -9,8 +10,8 @@
     {% if vinyls %}
         <ul>
             {% for vinyls in vinyls %}
-                <li>{{vinyl.title}}-{{vinyl.title}}-{{vinyl.title}} $</li>
-            {% endif %}
+                <li>{{vinyl.title}} - {{vinyl.title}} - {{vinyl.title}} $</li>
+            {% endfor %}
         <ul>   
     {% else %}
             <p>Ничего не найдено</p>
