@@ -32,13 +32,13 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li><a class="nav-link dropdown-toggle text-white" href="{% url 'main:home' %}">Главная</a></li>
-                        <li><a class="nav-link dropdown-toggle text-white" href="{% url 'catalog:catalog' %}">Каталог</a></li>
+                        <li><a class="nav-link dropdown-toggle text-white" href="{% url 'catalog:cata' %}">Каталог</a></li>
                         <li><a class="nav-link dropdown-toggle text-white" href="{% url 'orders:order_list' %}">Мои заказы</a></li>
                         {% if user.is_authenticated %}
                             <li><a class="nav-link dropdown-toggle text-white" href="{% url 'auth:profile' %}">Профиль</a></li>
                             <li><a class="nav-link dropdown-toggle text-white" href="{% url 'main:home' %}">Выйти</a></li>
                         {% else %}
-                            <li><a class="nav-link dropdown-toggle text-white" href="{% url 'main:login' %}">Войти</a></li>
+                            <li><a class="nav-link dropdown-toggle text-white" href="{% url 'auth:login' %}">Войти</a></li>
                         {% endif %}
                     </ul>
                     <form class="d-flex" method="get" action="{% url 'main:search_results' %}" class="search-form">
@@ -113,13 +113,13 @@
                             height="16">
                     </button>
                     <ul class="dropdown-menu bg-dark" data-bs-theme="dark">
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Все товары</a></li>
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Кухня</a></li>
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Спальня</a></li>
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Гостинная</a></li>
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Офис</a></li>
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Фурнитура</a></li>
-                        <li><a class="dropdown-item text-white" href="{% url 'catalog:catalog' %}">Декор</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Все товары</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Кухня</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Спальня</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Гостинная</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Офис</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Фурнитура</a></li>
+                        <li><a class="dropdown-item text-white" href="{% url 'catalog:cata' %}">Декор</a></li>
                     </ul>
                 </div>
                 <!-- Значек корзины, вызывает модальное окно -->

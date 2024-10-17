@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
-from vinyls.models import VinylRecord
+from catalogue.models import VinylRecord
 
 User = get_user_model()
 

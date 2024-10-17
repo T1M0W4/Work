@@ -1,0 +1,66 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Горячие новинки -->
+    <h2 class="mb-4">Горячие новинки</h2>
+    <div class="row">
+        {% for item in hot_new_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text"><strong>{{ item.price }} $</strong></p>
+                    <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-primary">Купить</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Горячие скидки -->
+    <h2 class="mb-4">Горячие скидки</h2>
+    <div class="row">
+        {% for item in hot_discount_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text"><strong><del>{{ item.original_price }} $</del> {{ item.discounted_price }} $</strong></p>
+                    <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-danger">Купить со скидкой</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+    <div class="tags">
+
+        {% for tag in tags %}
+            <form method="GET" onchange=document.forms[0].submit()>
+
+            </form>
+        {% endfor %}
+    </div>
+    <div class="main">
+        {% for vinyl in vinyls %}
+            <div class="vinyl_record">
+                <img class="cover" src="/media/{{ vinyl.cover }}">
+                <h1 class="title"><a>{{vinyl.artist.name}}</a></h1>
+                <h1 class="title"><a>{{vinyl.title}}</a></h1>
+                <h3 class="artist">{{vinyl.artist}}</h3>
+                <h1 class="price">{{vinyl.price}} $</h1>
+                <button class="to_stock">Add to cart</button>
+            </div>
+        {% endfor %}
+    </div>
+    <script>   
+    </script>
+{% endblock %}

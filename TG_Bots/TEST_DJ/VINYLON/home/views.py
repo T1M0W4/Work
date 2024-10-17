@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from vinyls.models import VinylRecord, Tag
+from catalogue.models import VinylRecord, Tag
 from orders.models import Order
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
@@ -52,3 +52,5 @@ def about(request):
     }
 
     return render(request, 'home/about.html', context)
+
+

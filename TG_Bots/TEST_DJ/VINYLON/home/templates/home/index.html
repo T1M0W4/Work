@@ -9,7 +9,45 @@
     <h1 class="mt-5 pt-5"><span style="color: rgb(215, 204, 204);">{{ content_1 }}</span>
     <br>
     <strong><span style="color: rgb(18, 6, 6);">{{ content_2 }}</span></strong></h1>
+    <div class="container mt-5">
+        <!-- Горячие новинки -->
+        <h2 class="mb-4">Горячие новинки</h2>
+        <div class="row">
+            {% for item in hot_new_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                        <p class="card-text"><strong>{{ item.price }} $</strong></p>
+                        <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-primary">Купить</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    
+        <!-- Горячие скидки -->
+        <h2 class="mb-4">Горячие скидки</h2>
+        <div class="row">
+            {% for item in hot_discount_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                        <p class="card-text"><strong><del>{{ item.original_price }} $</del> {{ item.discounted_price }} $</strong></p>
+                        <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-danger">Купить со скидкой</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>    
 {% endblock  %}
+
 
 {% block footer %}
 <footer class="py-4 bg-dark">
