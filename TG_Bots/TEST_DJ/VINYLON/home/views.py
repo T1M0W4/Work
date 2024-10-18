@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from catalogue.models import VinylRecord, Tag
+from catalogue.models import VinylRecord, Tag, Artist
 from orders.models import Order
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
 
 class HomePageView(ListView):
     model = VinylRecord
-    template_name = 'home/base.html'
+    template_name = 'home/index.html'
     context_object_name = 'vinyls'
     paginate_by = 10
     
@@ -18,7 +18,10 @@ class HomePageView(ListView):
         # Отображение заказов для авторизованных пользователей
         if self.request.user.is_authenticated:
             context['orders'] = Order.objects.filter(user=self.request.user)
-            
+        context['artists'] = Artist.objects.all() 
+        context['vinyl_records'] = VinylRecord.objects.all().order_by("-release_date")
+
+
         return context
 
 
