@@ -36,7 +36,12 @@
                         <li><a class="nav-link dropdown-toggle text-white" href="{% url 'orders:order_list' %}">Мои заказы</a></li>
                         {% if user.is_authenticated %}
                             <li><a class="nav-link dropdown-toggle text-white" href="{% url 'auth:profile' %}">Профиль</a></li>
-                            <li><a class="nav-link dropdown-toggle text-white" href="{% url 'main:home' %}">Выйти</a></li>
+                            <li>
+                                <form method="post" action="{% url 'auth:logout' %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-link nav-link text-white" type="submit">Выйти</button>
+                                </form>
+                            </li>
                         {% else %}
                             <li><a class="nav-link dropdown-toggle text-white" href="{% url 'auth:login' %}">Войти</a></li>
                         {% endif %}

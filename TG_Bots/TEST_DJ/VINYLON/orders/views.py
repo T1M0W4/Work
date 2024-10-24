@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView
-from .models import Order, OrderItem
+from .models import Order
+from .forms import OrderForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
@@ -24,10 +25,9 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
 
 class CreateOrderView(LoginRequiredMixin, CreateView):
     model = Order
-    fields = []
+    form_class = OrderForm  # Используем вашу форму
     success_url = reverse_lazy("orders:order_list")
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.user = self.request.user  # Устанавливаем пользователя
         return super().form_valid(form)
-

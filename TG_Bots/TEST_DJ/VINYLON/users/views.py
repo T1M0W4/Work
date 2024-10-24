@@ -22,7 +22,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 class RegisterView(FormView):
     template_name = "users/register.html"
     form_class = UserRegistrationForm
-    success_url = reverse_lazy("auth:user_profile")
+    success_url = reverse_lazy("auth:profile")  # Исправлено
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -49,19 +49,18 @@ class UserLoginView(LoginView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse_lazy("auth:user_profile")
+        return reverse_lazy("auth:profile")  # Исправлено
 
 class UserLogoutView(LogoutView):
-    next_page = reverse_lazy("auth:login")
+    next_page = reverse_lazy("auth:login")  # Исправлено
     
     def dispatch(self, request, *args, **kwargs):
         logger.info(f"Пользователь {request.user.username} вышел из системы.")
         return super().dispatch(request, *args, **kwargs)
 
-
 class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     template_name = "users/password_change.html"
-    success_url = reverse_lazy("auth:user_profile")
+    success_url = reverse_lazy("auth:profile")  # Исправлено
     
     def form_valid(self, form):
         logger.info(f"Пользователь {self.request.user.username} изменил пароль.")

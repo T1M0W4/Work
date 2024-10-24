@@ -12,10 +12,10 @@
             </form>
         {% endfor %}
     </div>
-    <div class="main">
+    <div class="main mt-4">
         {% for vinyl in vinyls %}
-            <div class="vinyl_record">
-                <img class="cover" src="/media/{{ vinyl.cover }}">
+            <div class="vinyl_record mt-4">
+                <img class="cover" src="/media/{{ vinyl.cover }}" class="card-img-top rounded-circle mx-auto" style="width: 300px; height: 300px;">
                 <h1 class="title"><a>{{vinyl.artist.name}}</a></h1>
                 <h1 class="title"><a>{{vinyl.title}}</a></h1>
                 <h3 class="artist">{{vinyl.artist}}</h3>

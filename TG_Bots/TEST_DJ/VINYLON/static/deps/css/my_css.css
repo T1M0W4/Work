@@ -5,6 +5,7 @@ body {
   background-position: center center;
   background-size: cover;
   height: 100%;
+  color: #f8f9fa; /* Цвет текста на фоне */
 }
 
 .dropdown-toggle::after {
@@ -12,7 +13,7 @@ body {
 }
 
 .custom-shadow {
-  box-shadow: 5px 5px 25px 19px #000000;
+  box-shadow: 2px 5px 25px 19px rgba(0, 0, 0, 0.5); /* Мягкая тень */
 }
 
 .product_id {
@@ -28,11 +29,125 @@ body {
   padding: 5px 10px;
   border-radius: 3px;
   font-size: 1rem;
-  box-shadow: 2px 2px 15px 9px #000000;
+  box-shadow: 2px 2px 15px 9px rgba(0, 0, 0, 0.5);
 }
 
 .badge-banner {
   top: 80%;
   border-radius: 15px;
   font-size: 0.7rem;
+}
+
+.card {
+  width: 180px; /* Фиксированная ширина карточки */
+  height: 250px; /* Фиксированная высота карточки */
+  min-width: 180px; /* Минимальная ширина карточки */
+  margin: 0; /* Убираем отступы между карточками */
+  border: none; /* Убираем границы карточек, если они есть */
+  flex: 1; /* Позволяет карточкам адаптироваться к размеру контейнера */
+  padding: 15px; /* Увеличенные внутренние отступы */
+  background-color: rgba(44, 44, 44, 0.7); /* Прозрачный темно-серый фон карточки */
+  color: white; /* Белый цвет текста */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Тень */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Плавный переход при наведении */
+}
+.card-container {
+  display: flex; /* Используем flexbox для отображения карточек в ряд */
+  overflow-x: auto; /* Включаем горизонтальную прокрутку */
+  white-space: nowrap; /* Предотвращаем перенос строк */
+  padding: 10px 0; /* Отступы по вертикали */
+  flex-wrap: nowrap; /* Убедитесь, что карточки не переносятся на следующую строку */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Подъем карточки при наведении */
+  box-shadow: 8px 10px 20px rgba(0, 0, 0, 0.7); /* Увеличенная тень */
+}
+
+.card-img-top {
+  width: 100px; /* Ширина изображения */
+  height: 100px; /* Высота изображения */
+  object-fit: cover; /* Поддержание пропорций изображения */
+  border-radius: 50%; /* Круглая форма */
+  margin: 0 auto; /* Центрирование */
+}
+
+.title {
+  font-size: 1.1rem; /* Увеличение размера заголовка */
+  font-weight: bold; /* Жирный текст */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Точки в конце текста, если он не влазит */
+}
+
+.price {
+  font-size: 1rem; /* Размер текста цены */
+  margin-top: 5px; /* Отступ сверху */
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 150px; /* Уменьшение ширины карточек на мобильных устройствах */
+  }
+}
+
+.card.bg-dark {
+  background-color: rgba(44, 44, 44, 0.7) !important; /* Прозрачный темно-серый фон */
+}
+
+.card.text-white {
+  color: #ffffff !important; /* Принудительно белый текст */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Центрирование содержимого */
+  align-items: center; /* Центрирование по горизонтали */
+  padding: 15px; /* Внутренние отступы */
+  overflow: hidden; /* Убрать скролл */
+}
+.playlist-container {
+  position: fixed; /* Зафиксируем позицию контейнера */
+  left: 0; /* Плотно к левой стороне */
+  top: 60px; /* Отступ сверху, чтобы не прилипать к верху */
+  width: 300px; /* Ширина контейнера */
+  height: auto; /* Автоматическая высота, чтобы содержимое помещалось */
+  background-color: rgba(44, 44, 44, 0.7); /* Прозрачный фон */
+  border-radius: 15px; /* Закругленные углы */
+  padding: 15px; /* Внутренние отступы */
+  color: white; /* Цвет текста */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Тень */
+  z-index: 10; /* Поверх других элементов */
+}
+
+.playlist-title {
+  font-size: 1.5rem; /* Размер заголовка плейлиста */
+  margin-bottom: 15px; /* Отступ снизу */
+}
+
+.playlist {
+  background-color: rgba(44, 44, 44, 0.8); /* Полупрозрачный фон */
+  padding: 15px; /* Отступы внутри плейлиста */
+  border-radius: 10px; /* Закругленные углы */
+  color: white; /* Цвет текста */
+}
+
+.track-item {
+  cursor: pointer; /* Указатель при наведении */
+  margin-bottom: 10px; /* Отступ между треками */
+}
+
+
+.track-item:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Цвет при наведении */
+}
+
+.track-title {
+  font-weight: bold; /* Жирный текст для названия трека */
+}
+
+.track-artist {
+  font-size: 0.9rem; /* Размер текста для имени исполнителя */
+  color: gray; /* Цвет текста для имени исполнителя */
 }

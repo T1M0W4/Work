@@ -1,4 +1,3 @@
-// Когда html документ готов (прорисован)
 $(document).ready(function () {
     // Берем из разметки элемент по id - оповещения от django
     var notification = $('#notification');
@@ -12,11 +11,10 @@ $(document).ready(function () {
     // При клике по значку корзины открываем всплывающее(модальное) окно
     $('#modalButton').click(function () {
         $('#exampleModal').appendTo('body');
-
         $('#exampleModal').modal('show');
     });
 
-    // Собыите клик по кнопке закрыть окна корзины
+    // Событие клик по кнопке закрыть окна корзины
     $('#exampleModal .btn-close').click(function () {
         $('#exampleModal').modal('hide');
     });
@@ -32,4 +30,12 @@ $(document).ready(function () {
         }
     });
 
+    // Добавляем обработчик клика на треки плейлиста
+    $('.track-item').click(function() {
+        var audioPlayer = $('#audio-player')[0];
+        var audioSource = $('#audio-source');
+        audioSource.attr('src', $(this).data('audio')); // Устанавливаем источник аудио
+        audioPlayer.load(); // Перезагружаем аудиоплеер
+        audioPlayer.play(); // Воспроизводим трек
+    });
 });

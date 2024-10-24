@@ -1,0 +1,35 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Детали заказа #{{ order.id }}</h1>
+    <p>Дата создания: {{ order.created_at|date:"d.m.Y H:i" }}</p>
+    <p>Пользователь: {{ order.user.username }}</p>
+    
+    <h2>Элементы заказа</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Виниловая пластинка</th>
+                <th>Количество</th>
+                <th>Цена за единицу</th>
+                <th>Итоговая цена</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.vinyl_record.title }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.vinyl_record.price|floatformat:2 }} $</td>
+                <td>{{ item.vinyl_record.price|floatformat:2 * item.quantity }} $</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Итого: {{ order.total_amount|floatformat:2 }} $</h3>
+    <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">Назад к списку заказов</a>
+</div>
+{% endblock %}

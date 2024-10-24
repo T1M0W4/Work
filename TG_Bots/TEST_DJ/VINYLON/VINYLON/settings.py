@@ -129,7 +129,7 @@ STATICFILES_DIRS: list[Path] = [
     BASE_DIR / 'static',
     ]
 
-MEADIA_URL = 'media/'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type

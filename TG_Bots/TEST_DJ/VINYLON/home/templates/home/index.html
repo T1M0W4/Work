@@ -3,84 +3,160 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'deps/css/my_footer_css.css' %}">
+    <link rel="stylesheet" href="{% static 'deps/css/my_css.css' %}"> <!-- Подключаем новый CSS файл -->
 {% endblock %}
 
 {% block content %}
-    {% comment %} <h1 class="mt-5 pt-5"><span style="color: rgb(215, 204, 204);">{{ content_1 }}</span>
-    <br>
-    <strong><span style="color: rgb(18, 6, 6);">{{ content_2 }}</span></strong></h1> {% endcomment %}
-    
-    <div class="container mt-5">
-        <!-- Горячие новинки -->
-
-        <h2 class="mb-4">Артисты</h2>
-        {% for artist in artists%}
-            <p>{{ artist.name }}</p>
-            <p><img src="{{ artist.pfp.url }}" width = 100></p>
-            <p>{{ artist.major_info }}</p>
-        {% endfor %}
-
-
-
-        <h2 class="mb-4">Пластинки</h2>
-        <div class="row">
-            {% for vinyl in vinyl_records %}
-            {% for i in '012345'|make_list %}
-            <div class="col-lg-3 col-md-4 mb-4 p-4">
-                <div class="card border-primary rounded custom-shadow">
-                    <img class="mx-1" src={{ vinyl.cover.url }} class="card-img-top" width=212>
-                    <div class="card-body">                           
-                            <p>{{ vinyl.title }}</p>
-                            <p>{{ vinyl.price }}</p>
-                            {% for tag in vinyl.tags.all %}
-                                <p>{{ tag.name }}</p>
-                            {% endfor%}
-                            <p>{{ vinyl.release_date|date:"SHORT_DATE_FORMAT" }}</p>
-                    </div>
-                </div>    
-            </div>
-            {% endfor %}
-            {% endfor %}
-        </div>
-        </div></div>
-        <h2 class="mb-4">Горячие новинки</h2>
-        <div class="row">
-            {% for item in hot_new_items|slice:":5" %} <!-- Отображаем только 5 товаров -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+    <div class="container mt-1">
+        <div class="main-content">
+            <h2 class="mb-2">Артисты</h2>
+            <div class="card-container">
+                {% for artist in artists %}
+                  <div class="card bg-dark text-white custom-shadow">
+                    {% if artist.pfp %}
+                      <img src="{{ artist.pfp.url }}" class="card-img-top rounded-circle" alt="{{ artist.name }}">
+                    {% else %}
+                      <img src="{% static 'default_artist.jpg' %}" class="card-img-top rounded-circle" alt="Default Artist">
+                    {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
-                        <p class="card-text">{{ item.description }}</p>
-                        <p class="card-text"><strong>{{ item.price }} $</strong></p>
-                        <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-primary">Купить</a>
+                      <h5 class="card-title">{{ artist.name }}</h5>
+                      <p class="card-text">{{ artist.major_info }}</p>
                     </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+            <h2 class="mb-2">Пластинки</h2>
+            <div class="card-container">
+                    {% for vinyl in vinyl_records %}
+                            <div class="card bg-dark text-white custom-shadow">
+                                <img src="{{ vinyl.cover.url }}" class="card-img-top rounded-circle mx-auto" style="width: 110px; height: 100px;">
+                                <div class="card-body p-1">
+                                    <p class="title">{{ vinyl.title }}</p>
+                                    <p class="price">{{ vinyl.price }} $</p>
+                                </div>
+                            </div>
+                    {% endfor %}
+            </div>
+                
+            <h2 class="mb-4">Горячие новинки</h2>
+            <div class="row">
+                {% for item in hot_new_items|slice:":5" %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.title }}</h5>
+                                <p class="card-text">{{ item.description }}</p>
+                                <p class="card-text"><strong>{{ item.price }} $</strong></p>
+                                <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-primary">Купить</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <h2 class="mb-4">Горячие скидки</h2>
+            <div class="row">
+                {% for item in hot_discount_items|slice:":5" %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.title }}</h5>
+                                <p class="card-text">{{ item.description }}</p>
+                                <p class="card-text">
+                                    <strong>
+                                        <del>{{ item.original_price }} $</del> {{ item.discounted_price }} $
+                                    </strong>
+                                </p>
+                                <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-danger">Купить со скидкой</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="playlist-container">
+                <h3 class="playlist-title">Плейлист</h3>
+                <div class="playlist">
+                    <ul>
+                        <li class="track-item" data-audio="track1.mp3">
+                            <span class="track-title">Трек 1</span>
+                            <span class="track-artist">Исполнитель 1</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 2</span>
+                            <span class="track-artist">Исполнитель 2</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 3</span>
+                            <span class="track-artist">Исполнитель 4</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 4</span>
+                            <span class="track-artist">Исполнитель 4</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 5</span>
+                            <span class="track-artist">Исполнитель 5</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 6</span>
+                            <span class="track-artist">Исполнитель 6</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 7</span>
+                            <span class="track-artist">Исполнитель 7</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 8</span>
+                            <span class="track-artist">Исполнитель 8</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 9</span>
+                            <span class="track-artist">Исполнитель 9</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 10</span>
+                            <span class="track-artist">Исполнитель 10</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 11</span>
+                            <span class="track-artist">Исполнитель 11</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 12</span>
+                            <span class="track-artist">Исполнитель 12</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 13</span>
+                            <span class="track-artist">Исполнитель 13</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 14</span>
+                            <span class="track-artist">Исполнитель 14</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 15</span>
+                            <span class="track-artist">Исполнитель 15</span>
+                        </li>
+                        <li class="track-item" data-audio="track2.mp3">
+                            <span class="track-title">Трек 16</span>
+                            <span class="track-artist">Исполнитель 16</span>
+                        </li>
+                        <!-- Добавьте другие треки по необходимости -->
+                    </ul>
                 </div>
             </div>
-            {% endfor %}
         </div>
-
-        <!-- Горячие скидки -->
-        <h2 class="mb-4">Горячие скидки</h2>
-
-        <div class="row">
-            {% for item in hot_discount_items|slice:":5" %} <!-- Отображаем только 5 товаров -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
-                        <p class="card-text">{{ item.description }}</p>
-                        <p class="card-text"><strong><del>{{ item.original_price }} $</del> {{ item.discounted_price }} $</strong></p>
-                        <a href="{% url 'catalog:item_detail' item.id %}" class="btn btn-danger">Купить со скидкой</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div class="pagination">
-    {% if is_pagination %}
-    {% endif %}
     </div>
+
+    <div class="pagination">
+        {% if is_pagination %}
+            <!-- Логика для пагинации здесь -->
+        {% endif %}
     </div>
 {% endblock %}
